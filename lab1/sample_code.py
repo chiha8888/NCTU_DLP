@@ -150,6 +150,7 @@ class SimpleNet:
         It should accepts the inputs and passing them through the network and return results.
         """
 
+
         return ...
 
     def backward(self):
@@ -175,8 +176,8 @@ class SimpleNet:
                 #   1. forward passing
                 #   2. compute loss
                 #   3. propagate gradient backward to the front
-                self.output = self.forward(inputs[idx:idx+1, :])
-                self.error = self.output - labels[idx:idx+1, :]
+                self.output = self.forward(inputs[idx, :])
+                self.error = self.output - labels[idx, :]
                 self.backward()
 
             if epochs % self.print_interval == 0:
@@ -198,8 +199,8 @@ class SimpleNet:
 
         error = 0.0
         for idx in range(n):
-            result = self.forward(inputs[idx:idx+1, :])
-            error += abs(result - labels[idx:idx+1, :])
+            result = self.forward(inputs[idx, :])
+            error += abs(result - labels[idx, :])
 
         error /= n
         print('accuracy: %.2f' % ((1 - error)*100) + '%')
