@@ -216,6 +216,7 @@ class SimpleNet:
             y: (1,batch_size) ndarray
         """
         pred_y=self.forward(X)
+        print(pred_y)
         loss=self.compute_loss(y,pred_y)
         acc=(1.-np.sum(np.abs(y-np.round(pred_y)))/y.shape[1])*100
         print(f'loss={loss:.5f} accuracy={acc:.2f}%')
@@ -256,7 +257,7 @@ class SimpleNet:
         plt.show()
 
 if __name__=='__main__':
-    X,y= GenData.fetch_data('Linear', 70)
+    X,y= GenData.fetch_data('XOR', 70)
     X=X.T
     y=y.T
 
