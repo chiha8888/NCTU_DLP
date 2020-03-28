@@ -1,5 +1,6 @@
 # NCTU_DLP
-
+2020 NCTU資工所 Deep Learning and Practice class  
+teacher:陳永昇、吳毅成、彭文孝  
 ## lab1
 手刻backpropagation  
 參考：  
