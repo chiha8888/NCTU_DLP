@@ -11,7 +11,9 @@ teacher:陳永昇、吳毅成、彭文孝
 ## lab3
 baseline:82%  
 input size(512x512)+randomflip+normalize+feature extraction 5 epochs+finetuning 15 epochs  
-baseline_專注：?  
+專注：?  
 input size(300x300)+randomflip+normalize+feature extraction 5 epochs+finetuning 15 epochs  
-baseline_專注_無正規：？  
+專注_無正規：？  
 input size(300x300)+randomflip+feature extraction 5 epochs+finetuning 15 epochs  
+weightedCrossEntropyLoss_無正規：壞掉...  
+![weightedCrossEntropyLoss_無正規](https://i.imgur.com/gmjzRGD.png)
