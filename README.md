@@ -9,13 +9,10 @@ teacher:陳永昇、吳毅成、彭文孝
 ## lab2
 加入regularization term，acc: 82% -> 88%  
 ## lab3
-請不要把280995張照片正規化...麻煩又沒效用  
-baseline:82%  
-input size(512x512)+randomflip+feature extraction 5 epochs+finetuning 15 epochs  
-- - -  
-專注：80%  
-CenterCrop(300x300)+randomflipze+feature extraction 5 epochs+finetuning 15 epochs   
-- - -  
-weightedCrossEntropyLoss：79%（不穩定）  
-weight=[1.0, 10.565217391304348, 4.906175771971497, 29.591690544412607, 35.55077452667814]  
+經實驗發現:  
+1. 無正規化、正規化(包括：transforms.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225])、  
+transforms.Normalize([0.5769, 0.3852, 0.2649],[0.1061, 0.0809, 0.0555]))acc都為82%  
+2. 專注(transforms.CenterCrop(300))acc為80%  
+3. weighted_loss([1.0, 10.565217391304348, 4.906175771971497, 29.591690544412607, 35.55077452667814])acc為80%，
+但confusion matrix最為正確，最適合實際醫學應用  
 
