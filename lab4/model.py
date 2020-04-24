@@ -83,7 +83,7 @@ class AttentionDecoderRNN(nn.Module):
         self.max_length = max_length
 
         self.embedding = nn.Embedding(self.input_size, self.hidden_size)
-        self.attn = nn.Linear(self.hidden_size * 3, self.max_length)
+        self.attn = nn.Linear(self.hidden_size * 2, self.max_length)
         self.attn_combine = nn.Linear(self.hidden_size * 2, self.hidden_size)
         self.dropout = nn.Dropout(self.dropout_p)
         self.rnn = nn.LSTM(self.hidden_size, self.hidden_size)
@@ -94,7 +94,7 @@ class AttentionDecoderRNN(nn.Module):
         embedded = self.dropout(embedded)
 
         attn_weights = F.softmax(
-            self.attn(torch.cat((embedded[0], hidden_state[0], cell_state[0]), 1)), dim=1)
+            self.attn(torch.cat((embedded[0], cell_state[0]), 1)), dim=1)
         attn_applied = torch.bmm(attn_weights.unsqueeze(0),
                                  encoder_outputs.unsqueeze(0))
 

@@ -21,7 +21,7 @@ from nltk.translate.bleu_score import SmoothingFunction, sentence_bleu
 
 
 """========================================================================================
-The sample.py includes the following template functions:
+The TA.py includes the following template functions:
 
 1. Encoder, decoder
 2. Training function

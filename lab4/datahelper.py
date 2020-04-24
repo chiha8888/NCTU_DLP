@@ -25,11 +25,9 @@ class DataTransformer:
 
     def sequence2indices(self,sequence,add_eos=True):
         """
-        :arg:
-            sequence(string): a char sequence
-            add_eox(boolean): whether add 'EOS' at the end of the sequence
-        :return:
-            indices: int sequence
+        :param sequence(string): a char sequence
+        :param add_eox(boolean): whether add 'EOS' at the end of the sequence
+        :return: int sequence
         """
         indices=[]
         for c in sequence:
@@ -39,16 +37,29 @@ class DataTransformer:
         self.MAX_LENGTH = max(self.MAX_LENGTH, len(indices))
         return indices
 
+    def indices2sequence(self,indices):
+        """
+        :param indices: int sequence (without EOS_token)
+        :return: string
+        """
+        re=""
+        for i in indices:
+            re+=self.idx2char[i]
+        return re
+
     def build_training_set(self,path):
         """
         :return:
-            training_list: [[input,target],[input,target]....]
+            int_list: [[input,target],[input,target]....]  (input & target are all int sequence)
+            str_list: [[input,target],[input,target]....]  (input & target are all string)
         """
-        training_list=[]
+        int_list=[]
+        str_list=[]
         with open(path,'r') as file:
             dict_list=json.load(file)
             for dict in dict_list:
                 target=self.sequence2indices(dict['target'])
                 for input in dict['input']:
-                    training_list.append([self.sequence2indices(input),target])
-        return training_list
+                    int_list.append([self.sequence2indices(input,add_eos=True),target])
+                    str_list.append([input,dict['target']])
+        return int_list,str_list
