@@ -19,4 +19,6 @@ acc都為82%
 
 3. weighted_loss([1.0, 10.565217391304348, 4.906175771971497, 29.591690544412607, 35.55077452667814])acc為80%，
 但confusion matrix最為正確，最適合實際醫學應用  
-
+## lab4
+attention decoder BLEU score: 0.6(code應該有錯)  
+simple decoder BLEU score: 0.96  
