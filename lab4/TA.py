@@ -21,7 +21,7 @@ from nltk.translate.bleu_score import SmoothingFunction, sentence_bleu
 
 
 """========================================================================================
-The TA.py includes the following template functions:
+The sample.py includes the following template functions:
 
 1. Encoder, decoder
 2. Training function
@@ -59,7 +59,11 @@ output = 'varable'
 #compute BLEU-4 score
 def compute_bleu(output, reference):
     cc = SmoothingFunction()
-    return sentence_bleu([reference], output,weights=(0.25, 0.25, 0.25, 0.25),smoothing_function=cc.method1)
+    if len(reference) == 3:
+        weights = (0.33,0.33,0.33)
+    else:
+        weights = (0.25,0.25,0.25,0.25)
+    return sentence_bleu([reference], output,weights=weights,smoothing_function=cc.method1)
 
 
 #Encoder
