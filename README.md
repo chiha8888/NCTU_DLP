@@ -21,4 +21,4 @@ acc都為82%
 但confusion matrix最為正確，最適合實際醫學應用  
 ## lab4
 attention decoder BLEU score: 0.6(code應該有錯)  
-simple decoder BLEU score: 0.96  
+simple decoder BLEU score: 0.98  
