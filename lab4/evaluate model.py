@@ -22,6 +22,7 @@ if __name__=='__main__':
     hidden_size=512
     teacher_forcing_ratio=0.7
     decoder_type='simple'
+    testfile='test.json'
     encoder_model_name=f'encoder_teacher{teacher_forcing_ratio:.2f}_hidden{hidden_size}.pt'
     decoder_model_name=f'{decoder_type}decoder_teacher{teacher_forcing_ratio:.2f}_hidden{hidden_size}.pt'
     """
@@ -29,7 +30,7 @@ if __name__=='__main__':
     """
     datatransformer=DataTransformer()
     # testing data
-    testing_list,testing_input=datatransformer.build_training_set(path='test.json')
+    testing_list,testing_input=datatransformer.build_training_set(path=testfile)
     testing_tensor_list=[]
     # convert list to tensor
     for testing_pair in testing_list:
