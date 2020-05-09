@@ -1,0 +1,162 @@
+* [33mcommit 32d9579022d2119fcb64eaec84eb541ead3cba02[m
+[31m|[m Author: dora wu <chiha8888@gmail.com>
+[31m|[m Date:   Tue Apr 28 21:00:37 2020 +0800
+[31m|[m 
+[31m|[m     add lab4/new_test.json & add lab5
+[31m|[m  
+* [33mcommit fd347aa1eb7dfa25371e9f6246b12e2c2920376c[m
+[31m|[m Author: dora wu <chiha8888@gmail.com>
+[31m|[m Date:   Mon Apr 27 18:27:34 2020 +0800
+[31m|[m 
+[31m|[m     Update README.md
+[31m|[m  
+* [33mcommit ca579558ebbb9452eb6641104243019c6c067383[m
+[31m|[m Author: dora wu <chiha8888@gmail.com>
+[31m|[m Date:   Mon Apr 27 18:26:05 2020 +0800
+[31m|[m 
+[31m|[m     update lab4 with new scoring function
+[31m|[m  
+* [33mcommit bd439492c25324481b4eaceea7ccdc472fc857f9[m
+[31m|[m Author: dora wu <chiha8888@gmail.com>
+[31m|[m Date:   Fri Apr 24 18:08:17 2020 +0800
+[31m|[m 
+[31m|[m     Update README.md
+[31m|[m  
+* [33mcommit 33ea635d8ce3fcf59817c65662b44c7c5f19452a[m
+[31m|[m Author: dora wu <chiha8888@gmail.com>
+[31m|[m Date:   Fri Apr 24 18:02:02 2020 +0800
+[31m|[m 
+[31m|[m     update lab4
+[31m|[m  
+* [33mcommit 5ab71f04e259664aed68e75e4e3e5e4158d637d9[m
+[31m|[m Author: dora wu <chiha8888@gmail.com>
+[31m|[m Date:   Wed Apr 22 22:52:24 2020 +0800
+[31m|[m 
+[31m|[m     Update README.md
+[31m|[m  
+* [33mcommit 86f8a3af85fa97a7d5498c19c3f8ffe86c5bf69d[m
+[31m|[m Author: dora wu <chiha8888@gmail.com>
+[31m|[m Date:   Wed Apr 22 22:22:50 2020 +0800
+[31m|[m 
+[31m|[m     update lab3
+[31m|[m    
+*   [33mcommit 3eea45c4143bfbedb386007cbcf02b46b278afa8[m
+[32m|[m[33m\[m  Merge: 13eff40 23e8fa0
+[32m|[m [33m|[m Author: dora wu <chiha8888@gmail.com>
+[32m|[m [33m|[m Date:   Sun Apr 19 16:53:10 2020 +0800
+[32m|[m [33m|[m 
+[32m|[m [33m|[m     Merge branch 'master' of https://github.com/chiha8888/NCTU_DLP
+[32m|[m [33m|[m   
+[32m|[m * [33mcommit 23e8fa01135d83ec3186c763891155657987a1f6[m
+[32m|[m [33m|[m Author: dora wu <chiha8888@gmail.com>
+[32m|[m [33m|[m Date:   Fri Apr 17 13:42:37 2020 +0800
+[32m|[m [33m|[m 
+[32m|[m [33m|[m     Update README.md
+[32m|[m [33m|[m   
+[32m|[m * [33mcommit b9e9f32d2c5fb69aedfcea640248e1f9e931b4cd[m
+[32m|[m [33m|[m Author: dora wu <chiha8888@gmail.com>
+[32m|[m [33m|[m Date:   Thu Apr 16 09:44:43 2020 +0800
+[32m|[m [33m|[m 
+[32m|[m [33m|[m     Update README.md
+[32m|[m [33m|[m   
+[32m|[m * [33mcommit 860af80bb4b9b10c972d8ef7113ab6e281f7bf62[m
+[32m|[m [33m|[m Author: dora wu <chiha8888@gmail.com>
+[32m|[m [33m|[m Date:   Wed Apr 15 23:26:34 2020 +0800
+[32m|[m [33m|[m 
+[32m|[m [33m|[m     Update README.md
+[32m|[m [33m|[m   
+[32m|[m * [33mcommit 366b7cf504457577627e9229e4542d78e2efd665[m
+[32m|[m [33m|[m Author: dora wu <chiha8888@gmail.com>
+[32m|[m [33m|[m Date:   Wed Apr 15 18:18:13 2020 +0800
+[32m|[m [33m|[m 
+[32m|[m [33m|[m     Update README.md
+[32m|[m [33m|[m   
+[32m|[m * [33mcommit d057ede5fd38b584b0ec7df7ab934b6b4c7c6c59[m
+[32m|[m [33m|[m Author: dora wu <chiha8888@gmail.com>
+[32m|[m [33m|[m Date:   Wed Apr 15 14:19:09 2020 +0800
+[32m|[m [33m|[m 
+[32m|[m [33m|[m     Update README.md
+[32m|[m [33m|[m   
+[32m|[m * [33mcommit 71522bdd2b4b5eaa7be974555768769eb2798b25[m
+[32m|[m [33m|[m Author: dora wu <chiha8888@gmail.com>
+[32m|[m [33m|[m Date:   Wed Apr 15 11:46:45 2020 +0800
+[32m|[m [33m|[m 
+[32m|[m [33m|[m     Update README.md
+[32m|[m [33m|[m   
+* [33m|[m [33mcommit 13eff4005b4ada134a3a06e34f012702b0db7619[m
+[33m|[m[33m/[m  Author: dora wu <chiha8888@gmail.com>
+[33m|[m   Date:   Sun Apr 19 16:51:55 2020 +0800
+[33m|[m   
+[33m|[m       add lab4
+[33m|[m  
+* [33mcommit f7d55abf22c4847ca6ddb9b32c09aa2b85571a9a[m
+[33m|[m Author: dora wu <chiha8888@gmail.com>
+[33m|[m Date:   Wed Apr 15 11:17:01 2020 +0800
+[33m|[m 
+[33m|[m     upgrade lab2 & add lab3
+[33m|[m  
+* [33mcommit 3bac7fb9ca7899733d55a26b90920da60f04fceb[m
+[33m|[m Author: dora wu <chiha8888@gmail.com>
+[33m|[m Date:   Mon Apr 6 23:36:11 2020 +0800
+[33m|[m 
+[33m|[m     add lab2 report
+[33m|[m  
+* [33mcommit 998747019daf891866edbbac69a82e2b25497b8b[m
+[33m|[m Author: dora wu <chiha8888@gmail.com>
+[33m|[m Date:   Mon Apr 6 17:15:21 2020 +0800
+[33m|[m 
+[33m|[m     update lab2
+[33m|[m  
+* [33mcommit 37bd7f153adc6b1612b0b037316f0c5463efa254[m
+[33m|[m Author: dora wu <chiha8888@gmail.com>
+[33m|[m Date:   Sat Apr 4 16:35:57 2020 +0800
+[33m|[m 
+[33m|[m     lab2 add .ipynb
+[33m|[m  
+* [33mcommit caab8e3ec1439c6f5fb8e305d78ce1a23b88fc77[m
+[33m|[m Author: dora wu <chiha8888@gmail.com>
+[33m|[m Date:   Wed Apr 1 10:08:51 2020 +0800
+[33m|[m 
+[33m|[m     add lab2
+[33m|[m  
+* [33mcommit a88345fbb5f7ed5923b87e82e6db0211f59d081e[m
+[33m|[m Author: dora wu <chiha8888@gmail.com>
+[33m|[m Date:   Sat Mar 28 17:54:26 2020 +0800
+[33m|[m 
+[33m|[m     Update README.md
+[33m|[m  
+* [33mcommit a976df2e737b2b284cd23246c11e3b70d31d62da[m
+[33m|[m Author: dora wu <chiha8888@gmail.com>
+[33m|[m Date:   Sat Mar 28 17:50:07 2020 +0800
+[33m|[m 
+[33m|[m     Create README.md
+[33m|[m  
+* [33mcommit d75cb0983454f3d6a42fa875e32fd33995dbe041[m
+[33m|[m Author: dora wu <chiha8888@gmail.com>
+[33m|[m Date:   Sat Mar 28 17:45:00 2020 +0800
+[33m|[m 
+[33m|[m     add lab1 report
+[33m|[m  
+* [33mcommit f97eaa3eb705e4639ba1170dce295c1ec623b143[m
+[33m|[m Author: dora wu <chiha8888@gmail.com>
+[33m|[m Date:   Sat Mar 28 16:21:26 2020 +0800
+[33m|[m 
+[33m|[m     fix lab1 nan problem
+[33m|[m  
+* [33mcommit 704505a52e0ec6c94f89b09bf9567cbba8895dd2[m
+[33m|[m Author: dora wu <chiha8888@gmail.com>
+[33m|[m Date:   Wed Mar 25 23:32:58 2020 +0800
+[33m|[m 
+[33m|[m     update lab1.ipynb
+[33m|[m  
+* [33mcommit 7cab56d22355622ac72d54f1e9b96f998b6f56dd[m
+[33m|[m Author: dora wu <chiha8888@gmail.com>
+[33m|[m Date:   Wed Mar 25 17:50:08 2020 +0800
+[33m|[m 
+[33m|[m     add lab1.ipynb
+[33m|[m  
+* [33mcommit 3ba406383095cfb9e21a97059f7d3b46fc425f4b[m
+  Author: dora wu <chiha8888@gmail.com>
+  Date:   Wed Mar 25 15:11:02 2020 +0800
+  
+      first commit
