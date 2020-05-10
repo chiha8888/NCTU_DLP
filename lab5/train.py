@@ -7,8 +7,6 @@ from nltk.translate.bleu_score import SmoothingFunction, sentence_bleu
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 SOS_token=0
 EOS_token=1
-SPC_token=2
-
 
 def compute_bleu(output, reference):
     """
@@ -45,8 +43,6 @@ def train(vae,loader_train,optimizer,teacher_forcing_ratio,kl_weight,tensor2stri
     :param vae: model
     :param loader_train: loader_train
     :param optimizer: sgd optimizer
-    :param teacher_forcing_ratio: 0.0~1.0
-    :param kl_annealing_type: 'monotonic' or 'cyclical'
     :param tensor2string: function(tensor){ return string }  (cutoff EOS automatically)
     :returns: CEloss, KLloss, BLEUscore
     """
@@ -93,24 +89,23 @@ def evaluate(vae,loader_test,tensor2string):
     vae.eval()
     re=[]
     total_BLEUscore=0
-    with torch.no_grad():
-        for in_word_tensor,in_tense_tensor,tar_word_tensor,tar_tense_tensor in loader_test:
-            in_word_tensor,in_tense_tensor=in_word_tensor[0].to(device),in_tense_tensor[0].to(device)
-            tar_word_tensor,tar_tense_tensor=tar_word_tensor[0].to(device),tar_tense_tensor[0].to(device)
+    for in_word_tensor,in_tense_tensor,tar_word_tensor,tar_tense_tensor in loader_test:
+        in_word_tensor,in_tense_tensor=in_word_tensor[0].to(device),in_tense_tensor[0].to(device)
+        tar_word_tensor,tar_tense_tensor=tar_word_tensor[0].to(device),tar_tense_tensor[0].to(device)
 
-            # init hidden_state
-            h0 = vae.encoder.init_h0(vae.hidden_size - vae.conditional_size)
-            in_c = vae.tense_embedding(in_tense_tensor).view(1, 1, -1)
-            encoder_hidden_state = torch.cat((h0, in_c), dim=-1)
-            # init cell_state
-            encoder_cell_state = vae.encoder.init_c0()
+        # init hidden_state
+        h0 = vae.encoder.init_h0(vae.hidden_size - vae.conditional_size)
+        in_c = vae.tense_embedding(in_tense_tensor).view(1, 1, -1)
+        encoder_hidden_state = torch.cat((h0, in_c), dim=-1)
+        # init cell_state
+        encoder_cell_state = vae.encoder.init_c0()
 
-            # forwarding one word by calling VAE Mode inference
-            tar_c=vae.tense_embedding(tar_tense_tensor).view(1,1,-1)
-            predict_output=vae.inference(in_word_tensor,encoder_hidden_state,encoder_cell_state,tar_c)
-            target_word=tensor2string(tar_word_tensor)
-            predict_word=tensor2string(predict_output)
-            re.append([tensor2string(in_word_tensor),target_word,predict_word])
-            total_BLEUscore+=compute_bleu(predict_word,target_word)
+        # forwarding one word by calling VAE Mode inference
+        tar_c=vae.tense_embedding(tar_tense_tensor).view(1,1,-1)
+        predict_output=vae.inference(in_word_tensor,encoder_hidden_state,encoder_cell_state,tar_c)
+        target_word=tensor2string(tar_word_tensor)
+        predict_word=tensor2string(predict_output)
+        re.append([tensor2string(in_word_tensor),target_word,predict_word])
+        total_BLEUscore+=compute_bleu(predict_word,target_word)
 
     return re, total_BLEUscore/len(loader_test)

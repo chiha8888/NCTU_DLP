@@ -7,9 +7,8 @@ import torch.nn.functional as F
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 SOS_token=0
 EOS_token=1
-SPC_token=2
 
-class VAE(nn.Module):
+class VAE(nn.Module):  # conditional VAE
     # Encoder
     class EncoderRNN(nn.Module):
         def __init__(self, input_size, hidden_size):

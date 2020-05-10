@@ -8,6 +8,7 @@ from torch.utils.data import DataLoader
 from datahelper import MyDataSet
 from model import VAE
 from train import train,evaluate
+from util import get_teacher_forcing_ratio,get_kl_weight,get_gaussian_score,generateWord,plot
 
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
@@ -19,53 +20,11 @@ hidden_size = 256  # LSTM hidden size
 latent_size = 32
 conditional_size = 8
 LR = 0.05
-epochs = 1000
-
-
-def Gaussian_score(words):
-    """
-    :param words:
-    words = [['consult', 'consults', 'consulting', 'consulted'],
-             ['plead', 'pleads', 'pleading', 'pleaded'],
-             ['explain', 'explains', 'explaining', 'explained'],
-             ['amuse', 'amuses', 'amusing', 'amused'], ....]
-    """
-    words_list = []
-    score = 0
-    yourpath = os.path.join('dataset','train.txt')  #should be your directory of train.txt
-    with open(yourpath,'r') as fp:
-        for line in fp:
-            word = line.split(' ')
-            word[3] = word[3].strip('\n')
-            words_list.extend([word])
-        for t in words:
-            for i in words_list:
-                if t == i:
-                    score += 1
-    return score/len(words)
-
-def get_teacher_forcing_ratio(epoch,total_epoch):
-    # range between 0.0~1.0
-    return 1.-(1./total_epoch)*epoch
-
-def get_kl_weight(epoch,kl_annealing_type,period):
-    """
-    :param epoch: i-th epoch
-    :param kl_annealing_type: 'monotonic' or 'cyclical'
-    :param period: #epoch for kl_weight to reach 1.0 from 0.0
-    :return: 0.0~1.0 kl_weight
-    """
-    assert kl_annealing_type=='monotonic' or kl_annealing_type=='cyclical','kl_annealing_type not exist!'
-    if kl_annealing_type=='monotonic':
-        if epoch>=period:
-            return 1.
-        else:
-            return (1./period)*epoch
-    else:  # cyclical
-        if (epoch//period)%2==1:
-            return 1.
-        else:
-            return (1./period)*(epoch%period)
+epochs = 200
+period=50
+highest_tf=0.8
+lowest_tf=0.0
+kl_annealing_type='monotonic'  # 'monotonic' or 'cycle'
 
 
 if __name__=='__main__':
@@ -81,53 +40,50 @@ if __name__=='__main__':
     vae=VAE(input_size,hidden_size,latent_size,conditional_size,max_length=dataset_train.max_length).to(device)
 
     # train
-    CEloss_list=[]
-    KLloss_list=[]
-    BLEU_list=[]
     optimizer = optim.SGD(vae.parameters(), lr=LR)
+    CEloss_list,KLloss_list,BLEUscore_list,Gaussianscore_list,teacher_forcing_ratio_list,kl_weight_list=[],[],[],[],[],[]
+    best_score=0  # score = BLEUscore + Gaussianscore
+    best_model_wts=None
     for epoch in range(1,epochs+1):
         """
         train
         """
-        teacher_forcing_ratio=get_teacher_forcing_ratio(epoch,epochs)
-        kl_weight=get_kl_weight(epoch,kl_annealing_type='monotonic',period=epochs)
-        CEloss,KLloss,BLEUscore=train(vae, loader_train, optimizer, teacher_forcing_ratio, kl_weight, dataset_train.tensor2string)
+        # get teacher_forcing_ratio & kl_weight
+        teacher_forcing_ratio=get_teacher_forcing_ratio(epoch,epochs,high=highest_tf,low=lowest_tf)
+        kl_weight=get_kl_weight(epoch,kl_annealing_type,p=period)
+        CEloss,KLloss,_=train(vae, loader_train, optimizer, teacher_forcing_ratio, kl_weight, dataset_train.tensor2string)
         CEloss_list.append(CEloss)
         KLloss_list.append(KLloss)
-        BLEU_list.append(BLEUscore)
-        print(f'epoch{epoch:>2d}/{epochs}  teacher_forcing_ratio:{teacher_forcing_ratio:.2f}  kl_weight:{kl_weight:.2f}')
-        print(f'CE:{CEloss:.4f} + KL:{KLloss:.4f} = {CEloss+KLloss:.4f}    {BLEUscore:.4f}')
+        teacher_forcing_ratio_list.append(teacher_forcing_ratio)
+        kl_weight_list.append(kl_weight)
+        print(f'epoch{epoch:>2d}/{epochs}  tf_ratio:{teacher_forcing_ratio:.2f}  kl_weight:{kl_weight:.2f}')
+        print(f'CE:{CEloss:.4f} + KL:{KLloss:.4f} = {CEloss+KLloss:.4f}')
 
         """
         evaluate
         """
-        conversion,BLUEscore=evaluate(vae,loader_test,dataset_test.tensor2string)
-        print(f'eval BLEU socre: {BLEUscore:.4f}')
+        conversion,BLEUscore=evaluate(vae,loader_test,dataset_test.tensor2string)
+        # generate words
+        generated_words=generateWord(vae,latent_size,dataset_test.tensor2string)
+        Gaussianscore=get_gaussian_score(generated_words)
+        BLEUscore_list.append(BLEUscore)
+        Gaussianscore_list.append(Gaussianscore)
         print(conversion)
+        print(f'BLEU socre: {BLEUscore:.4f}')
+        print(f'Gaussian score: {Gaussianscore:.4f}')
+        print()
 
         """
-        Gaussian noise generation
+        update best model wts
         """
-        gaussian_predict=[]
-        max_gaussian_score=0
-        for i in range(10):
-            latent = torch.randn(1, 1, latent_size).to(device)
-            predict=[]
-            for tense in range(4):
-                predict_output=dataset_test.tensor2string(vae.generate(latent,tense))
-                predict.append(predict_output)
-            gaussian_predict.append(predict)
-        score=Gaussian_score(gaussian_predict)
-        print(f'gaussian_score: {score:.4f}')
-        max_gaussian_score=max(max_gaussian_score,score)
+        if BLEUscore+Gaussianscore>best_score:
+            best_score=BLEUscore+Gaussianscore
+            best_model_wts=copy.deepcopy(vae.state_dict())
 
-        print('==============================================================')
+    # save model
+    torch.save(best_model_wts,os.path.join('models',f'{kl_annealing_type}_p{period}_score{best_score:.2f}.pt'))
 
-    print(f'max_gaussian_score={max_gaussian_score}')
-    fig=plt.figure(figsize=(8,6))
-    plt.plot(CEloss_list,label='CEloss')
-    plt.plot(KLloss_list,label='KLloss')
-    plt.legend()
+    fig=plot(epochs,CEloss_list,KLloss_list,BLEUscore_list,Gaussianscore_list,teacher_forcing_ratio_list,kl_weight_list)
+    fig.savefig(os.path.join('results',f'score{best_score:.2f}.png'))
     fig.show()
-    fig.savefig('result.png')
     plt.waitforbuttonpress(0)
