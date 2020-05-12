@@ -22,3 +22,12 @@ acc都為82%
 ## lab4
 attention decoder BLEU score: 0.6(code應該有錯)  
 simple decoder BLEU score: 0.98  
+## lab5
+test.txt prediction:  
+[['abandon', 'abandoned', 'abandoned'], ['abet', 'abetting', 'abetting'], ['begin', 'begins', 'begins'], ['expend', 'expends', 'expects'], ['sent', 'sends', 'senses'], ['split', 'splitting', 'splitting'], ['flared', 'flare', 'flare'], ['functioning', 'function', 'function'], ['functioning', 'functioned', 'functioned'], ['healing', 'heals', 'heals']]  
+
+generate words with 4 different tenses:  
+[['applie', 'applies', 'applies', 'applied'], ['fester', 'festures', 'festering', 'festered'], ['realize', 'realizes', 'realing', 'realized'], ['allare', 'alleges', 'alleging', 'alleged'], ['pray', 'prattles', 'praying', 'prattled'], ['scrutinize', 'scrutinizes', 'scrutinizing', 'scrutinized'], ['pelmit', 'pellies', 'pellioning', 'expiated'], ['feil', 'feils', 'feiling', 'feilched'], ['repail', 'repairs', 'repairing', 'repaired'], ['jab', 'jabsts', 'jabbing', 'jabbed']]  
+
+avg BLEUscore: 0.79  
+avg Gaussianscore: 0.36  
