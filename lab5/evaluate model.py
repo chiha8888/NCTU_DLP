@@ -1,61 +1,54 @@
 from __future__ import unicode_literals, print_function, division
 import os
 import torch
-device=torch.device('cuda' if torch.cuda.is_available() else 'cpu')
-from nltk.translate.bleu_score import SmoothingFunction, sentence_bleu
-from model import EncoderRNN,SimpleDecoderRNN,AttentionDecoderRNN
-from train import trainIters,evaluateAll
-from datahelper import DataTransformer
+from torch import optim
+import copy
+import matplotlib.pyplot as plt
+from torch.utils.data import DataLoader
+from datahelper import MyDataSet
+from model import VAE
+from train import train, evaluate, generateWord
+from util import get_teacher_forcing_ratio, get_kl_weight, get_gaussian_score, plot
 
-#compute BLEU-4 score
-def compute_bleu(output, reference):
-    cc = SmoothingFunction()
-    if len(reference) == 3:
-        weights = (0.33,0.33,0.33)
-    else:
-        weights = (0.25,0.25,0.25,0.25)
-    return sentence_bleu([reference], output,weights=weights,smoothing_function=cc.method1)
+device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+SOS_token = 0
+EOS_token = 1
+# ----------Hyper Parameters----------#
+input_size = 28  # The number of vocabulary: input_size==vocab_size  {SOS,EOS,a,b,c,....,z}
+hidden_size = 256  # LSTM hidden size
+latent_size = 32
+conditional_size = 8
+max_length=15
+file_path= 'best_cycle_time2_epochs500.pt'  #'score0.84.pt'
 
+if __name__ == '__main__':
+    # dataloader
+    dataset_test = MyDataSet(path='test.txt', is_train=False)
+    loader_test = DataLoader(dataset_test, batch_size=1, shuffle=False)
 
-if __name__=='__main__':
-    vocab_size=29
-    hidden_size=512
-    teacher_forcing_ratio=0.7
-    decoder_type='simple'
-    testfile='test.json'
-    encoder_model_name=f'encoder_teacher{teacher_forcing_ratio:.2f}_hidden{hidden_size}.pt'
-    decoder_model_name=f'{decoder_type}decoder_teacher{teacher_forcing_ratio:.2f}_hidden{hidden_size}.pt'
+    # VAE model
+    vae = VAE(input_size, hidden_size, latent_size, conditional_size, max_length).to(device)
+    vae.load_state_dict(torch.load(os.path.join('models',file_path)))
+
     """
-    load testing data
+    evaluate
     """
-    datatransformer=DataTransformer()
-    # testing data
-    testing_list,testing_input=datatransformer.build_training_set(path=testfile)
-    testing_tensor_list=[]
-    # convert list to tensor
-    for testing_pair in testing_list:
-        input_tensor=torch.tensor(testing_pair[0],device=device).view(-1,1)
-        target_tensor=torch.tensor(testing_pair[1],device=device).view(-1,1)
-        testing_tensor_list.append((input_tensor,target_tensor))
-    """
-    load model
-    """
-    encoder=EncoderRNN(vocab_size,hidden_size).to(device)
-    encoder.load_state_dict(torch.load(os.path.join('models',encoder_model_name)))
-    decoder=SimpleDecoderRNN(vocab_size,hidden_size).to(device)
-    decoder.load_state_dict(torch.load(os.path.join('models',decoder_model_name)))
-    """
-    test
-    """
-    predicted_list = evaluateAll(decoder_type, encoder, decoder, testing_tensor_list,max_length=20, device=device)
-    # test all testing data
-    score = 0
-    for i, (input, target) in enumerate(testing_input):
-        predict = datatransformer.indices2sequence(predicted_list[i])
-        print(f'input:  {input}')
-        print(f'target: {target}')
-        print(f'pred:   {predict}')
-        print('============================')
-        score += compute_bleu(predict, target)
-    score /= len(testing_input)
-    print(f'BLEU-4: {score:.2f}')
+    total_BLEUscore=0
+    total_Gaussianscore=0
+    test_time=20
+    for i in range(test_time):
+        conversion, BLEUscore = evaluate(vae, loader_test, dataset_test.tensor2string)
+        # generate words
+        generated_words=generateWord(vae,latent_size,dataset_test.tensor2string)
+        Gaussianscore=get_gaussian_score(generated_words)
+        print('test.txt prediction:')
+        print(conversion)
+        print('generate 100 words with 4 different tenses:')
+        print(generated_words)
+        print(f'BLEU socre:{BLEUscore:.2f}')
+        print(f'Gaussian score:{Gaussianscore:.2f}')
+        total_BLEUscore+=BLEUscore
+        total_Gaussianscore+=Gaussianscore
+    print()
+    print(f'avg BLEUscore {total_BLEUscore/test_time:.2f}')
+    print(f'avg Gaussianscore {total_Gaussianscore/test_time:.2f}')

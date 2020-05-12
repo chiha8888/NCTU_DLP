@@ -13,7 +13,7 @@ class VAE(nn.Module):  # conditional VAE
     class EncoderRNN(nn.Module):
         def __init__(self, input_size, hidden_size):
             """
-            :param input_size: 29 (containing:SOS,EOS,UNK,a-z)
+            :param input_size: 28 (containing:SOS,EOS,a-z)
             :param hidden_size: 256 or 512
             """
             super(VAE.EncoderRNN,self).__init__()
@@ -73,7 +73,7 @@ class VAE(nn.Module):  # conditional VAE
 
     def __init__(self, input_size, hidden_size, latent_size, conditional_size,max_length):
         """
-        :param input_size: 29
+        :param input_size: 28
         :param hidden_size: 256 or 512
         :param latent_size: 32
         :param conditional_size: 8

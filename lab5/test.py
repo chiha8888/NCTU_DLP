@@ -31,20 +31,16 @@ fig.show()
 plt.waitforbuttonpress(0)
 """
 
-"""
+
 tf_list=[]
-epochs=200
-for epoch in range(1,epochs+1):
-    tf_list.append(get_teacher_forcing_ratio(epoch,epochs,0.8,0))
-plt.plot(range(1,epochs+1),tf_list,linestyle=':')
+epochs=500
 
 kl_weight_list=[]
-kl_annealing_type='monotonic'
-p=50
+kl_annealing_type='cycle'
+time=2
 for epoch in range(1,epochs+1):
-    kl_weight_list.append(get_kl_weight(epoch,kl_annealing_type,p))
+    kl_weight_list.append(get_kl_weight(epoch,epochs,kl_annealing_type,time))
 plt.plot(range(1,epochs+1),kl_weight_list,linestyle=':')
 
 
 plt.show()
-"""

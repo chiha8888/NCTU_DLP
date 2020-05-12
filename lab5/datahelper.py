@@ -4,20 +4,20 @@ import torch.utils.data as data
 
 class DataTransformer:
     def __init__(self):
-        self.char2idx=self.build_char2idx()  # {'SOS':0,'EOS':1,'SPC':2,'a':3,'b':4 ... 'z':28}
-        self.idx2char=self.build_idx2char()  # {0:'SOS',1:'EOS',2:'SPC',3:'a',4:'b' ... 28:'z'}
+        self.char2idx=self.build_char2idx()  # {'SOS':0,'EOS':1,'a':2,'b':3 ... 'z':27}
+        self.idx2char=self.build_idx2char()  # {0:'SOS',1:'EOS',2:'a',3:'b' ... 27:'z'}
         self.tense2idx={'sp':0,'tp':1,'pg':2,'p':3}
         self.idx2tense={0:'sp',1:'tp',2:'pg',3:'p'}
         self.max_length=0  # max length of the training data word(contain 'EOS')
 
     def build_char2idx(self):
-        dictionary={'SOS':0,'EOS':1,'SPC':2}
-        dictionary.update([(chr(i+97),i+3) for i in range(0,26)])
+        dictionary={'SOS':0,'EOS':1}
+        dictionary.update([(chr(i+97),i+2) for i in range(0,26)])
         return dictionary
 
     def build_idx2char(self):
-        dictionary={0:'SOS',1:'EOS',2:'SPC'}
-        dictionary.update([(i+3,chr(i+97)) for i in range(0,26)])
+        dictionary={0:'SOS',1:'EOS'}
+        dictionary.update([(i+2,chr(i+97)) for i in range(0,26)])
         return dictionary
 
     def string2tensor(self,string,add_eos=True):
