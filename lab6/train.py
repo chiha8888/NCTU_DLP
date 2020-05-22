@@ -1,5 +1,4 @@
 import torch
-import torch.nn as nn
 import numpy as np
 import copy
 import os
@@ -7,6 +6,7 @@ import os
 from util import get_test_conditions,save_image
 from evaluator import EvaluationModel
 device=torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+
 
 def train(dataloader,g_model,d_model,z_dim,epochs,lr,LAMBDA,n_critic):
     """
@@ -57,8 +57,7 @@ def train(dataloader,g_model,d_model,z_dim,epochs,lr,LAMBDA,n_critic):
                 optimizer_g.zero_grad()
 
                 z = random_z(batch_size, z_dim).to(device)
-                ran_conditions = random_conditions(batch_size).to(device)
-                gen_imgs = g_model(z, ran_conditions)
+                gen_imgs = g_model(z, conditions)
                 fake_predicts = d_model(gen_imgs,conditions)
 
                 # bp
@@ -90,7 +89,7 @@ def calc_gradient_penalty(netD, real_data, fake_data, conditions):
     batch_size = real_data.shape[0]
     alpha = torch.rand(batch_size, 1, 1, 1)
     alpha = alpha.expand(real_data.shape).to(device)
-    interpolates = alpha * real_data + ((1 - alpha) * fake_data)
+    interpolates = (alpha * real_data + ((1 - alpha) * fake_data)).requires_grad_(True)
 
     disc_interpolates = netD(interpolates,conditions)
 
