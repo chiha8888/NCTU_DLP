@@ -14,7 +14,6 @@ image_shape=(64,64,3)
 epochs=200
 lr=0.0002
 batch_size=64
-test_path=os.path.join('dataset','test.json')
 
 
 if __name__=='__main__':
@@ -30,5 +29,5 @@ if __name__=='__main__':
     discrimiator.weight_init(mean=0,std=0.02)
 
     # train
-    train(loader_train,generator,discrimiator,z_dim,c_dim,epochs,lr,test_path)
+    train(loader_train,generator,discrimiator,z_dim,epochs,lr)
 

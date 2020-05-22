@@ -1,6 +1,6 @@
 import torch
 import torch.nn as nn
-from torchvision import transforms
+
 
 class Discriminator(nn.Module):
     def __init__(self,img_shape,c_dim):
@@ -47,6 +47,8 @@ class Discriminator(nn.Module):
             if isinstance(self._modules[m], nn.ConvTranspose2d) or isinstance(self._modules[m], nn.Conv2d):
                 self._modules[m].weight.data.normal_(mean, std)
                 self._modules[m].bias.data.zero_()
+
+
 
 class Generator(nn.Module):
     def __init__(self,z_dim,c_dim):

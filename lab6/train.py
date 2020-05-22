@@ -1,24 +1,24 @@
+import os
 import torch
 import torch.nn as nn
 import numpy as np
 import copy
-import os
 
-from util import get_test_conditions
+from util import get_test_conditions,save_image
 from evaluator import EvaluationModel
 device=torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
-def train(dataloader,g_model,d_model,z_dim,c_dim,epochs,lr,test_path):
+
+def train(dataloader,g_model,d_model,z_dim,epochs,lr):
     """
     :param z_dim: 100
-    :param c_dim: 100
     """
     Criterion=nn.BCELoss()
     optimizer_g=torch.optim.Adam(g_model.parameters(),lr,betas=(0.5,0.99))
     optimizer_d=torch.optim.Adam(d_model.parameters(),lr,betas=(0.5,0.99))
     evaluation_model=EvaluationModel()
 
-    test_conditions=get_test_conditions(test_path).to(device)
+    test_conditions=get_test_conditions(os.path.join('dataset','test.json')).to(device)
     fixed_z = random_z(len(test_conditions), z_dim).to(device)
     best_score = 0
 
@@ -79,18 +79,20 @@ def train(dataloader,g_model,d_model,z_dim,c_dim,epochs,lr,test_path):
         if score>best_score:
             best_score=score
             best_model_wts=copy.deepcopy(g_model.state_dict())
-            torch.save(best_model_wts,os.path.join('models',f'score{score:.2f}.pt'))
+            torch.save(best_model_wts,os.path.join('models',f'epoch{epoch}_score{score:.2f}.pt'))
         print(f'avg loss_g: {total_loss_g/len(dataloader):.3f}  avg_loss_d: {total_loss_d/len(dataloader):.3f}')
         print(f'testing score: {score:.2f}')
         print('---------------------------------------------')
+        # savefig
+        save_image(gen_imgs, os.path.join('results', f'epoch{epoch}.png'), nrow=8, normalize=True)
 
 def random_z(batch_size,z_dim):
     return torch.randn(batch_size,z_dim)
 
-def random_labels(batch_size,c_dim):
+def random_conditions(batch_size):
     pick_num=np.random.randint(1,4)
     pick=np.random.choice(24,pick_num,replace=False)
-    labels=torch.zeros(batch_size,c_dim)
+    labels=torch.zeros(batch_size,24)
     for i in pick:
         labels[i]=1.
     return labels
