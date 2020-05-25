@@ -20,8 +20,7 @@ def get_test_conditions(path):
 
     return labels
 
-def make_grid(tensor, nrow=8, padding=2,
-              normalize=False, range=None, scale_each=False, pad_value=0):
+def make_grid(tensor, nrow=8, padding=2, normalize=False, range=None, scale_each=False, pad_value=0):
     """Make a grid of images.
     Args:
         tensor (Tensor or list): 4D mini-batch Tensor of shape (B x C x H x W)
@@ -102,8 +101,7 @@ def make_grid(tensor, nrow=8, padding=2,
     return grid
 
 
-def save_image(tensor, fp, nrow=8, padding=2,
-               normalize=False, range=None, scale_each=False, pad_value=0, format=None):
+def save_image(tensor, fp, nrow=8, padding=2, normalize=False, range=None, scale_each=False, pad_value=0, format=None):
     """Save a given Tensor into an image file.
     Args:
         tensor (Tensor or list): Image to be saved. If given a mini-batch tensor,

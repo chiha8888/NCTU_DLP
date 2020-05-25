@@ -89,14 +89,6 @@ def train(dataloader,g_model,d_model,z_dim,epochs,lr):
 def random_z(batch_size,z_dim):
     return torch.randn(batch_size,z_dim)
 
-def random_conditions(batch_size):
-    pick_num=np.random.randint(1,4)
-    pick=np.random.choice(24,pick_num,replace=False)
-    labels=torch.zeros(batch_size,24)
-    for i in pick:
-        labels[i]=1.
-    return labels
-
 
 
 

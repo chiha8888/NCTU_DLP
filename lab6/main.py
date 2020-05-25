@@ -9,7 +9,7 @@ from train import train
 
 device=torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 z_dim=100
-c_dim=100
+c_dim=200
 image_shape=(64,64,3)
 epochs=200
 lr=0.0002

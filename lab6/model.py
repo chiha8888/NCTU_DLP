@@ -61,7 +61,7 @@ class Generator(nn.Module):
         self.c_dim=c_dim
         self.conditionExpand=nn.Sequential(
             nn.Linear(24,c_dim),
-            nn.LeakyReLU()
+            nn.ReLU()
         )
         kernel_size=(4,4)
         channels=[z_dim+c_dim,512,256,128,64]
@@ -70,7 +70,7 @@ class Generator(nn.Module):
             setattr(self,'convT'+str(i),nn.Sequential(
                 nn.ConvTranspose2d(channels[i-1],channels[i],kernel_size,stride=(2,2),padding=paddings[i-1]),
                 nn.BatchNorm2d(channels[i]),
-                nn.LeakyReLU()
+                nn.ReLU()
             ))
         self.convT5=nn.ConvTranspose2d(64,3,kernel_size,stride=(2,2),padding=(1,1))
         self.tanh=nn.Tanh()
