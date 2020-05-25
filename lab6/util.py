@@ -4,13 +4,13 @@ import json
 import torch
 irange=range
 
-def get_test_conditions():
+def get_test_conditions(path):
     """
     :return: (#test conditions,#classes) tensors
     """
     with open(os.path.join('dataset', 'objects.json'), 'r') as file:
         classes = json.load(file)
-    with open(os.path.join('dataset','test.json'),'r') as file:
+    with open(path,'r') as file:
         test_conditions_list=json.load(file)
 
     labels=torch.zeros(len(test_conditions_list),len(classes))

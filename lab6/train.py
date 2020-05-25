@@ -51,7 +51,7 @@ def train(dataloader,g_model,d_model,z_dim,epochs,lr,LAMBDA,n_critic):
             optimizer_d.step()
 
             """
-            train generator every 5 iterations
+            train generator every n_critic iterations
             """
             if i%n_critic==0:
                 optimizer_g.zero_grad()
@@ -103,16 +103,3 @@ def calc_gradient_penalty(netD, real_data, fake_data, conditions):
 
 def random_z(batch_size,z_dim):
     return torch.randn(batch_size,z_dim)
-
-def random_conditions(batch_size):
-    pick_num=np.random.randint(1,4)
-    pick=np.random.choice(24,pick_num,replace=False)
-    re=torch.zeros(batch_size,24)
-    for i in pick:
-        re[i]=1.
-    return re
-
-
-
-
-
