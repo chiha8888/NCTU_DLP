@@ -31,3 +31,12 @@ generate words with 4 different tenses:
 
 avg BLEUscore: 0.79  
 avg Gaussianscore: 0.36  
+## lab6
+cDCGAN score: 0.70  
+WGAN-GP score: 0.40  
+傳統cDCGAN score: 0.36
+
+結論：  
+1. train G 4times 跟 train G 5times 結果差不多  
+2. Generator要用RELU + Discriminator要用LeakyRelu 的效果好一點  
+3. c_dim 200 比 100 好  
