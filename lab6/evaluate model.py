@@ -28,5 +28,6 @@ if __name__=='__main__':
         print(f'score: {score:.2f}')
         avg_score+=score
 
+    save_image(gen_imgs,'eval.png',nrow=8,normalize=True)
     print()
     print(f'avg score: {avg_score/10:.2f}')

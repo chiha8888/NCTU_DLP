@@ -4,10 +4,6 @@ import torch.nn as nn
 
 class Discriminator(nn.Module):
     def __init__(self,img_shape,c_dim):
-        """
-        :param img_shape: (64,64,3)
-        :param c_dim: 100
-        """
         super(Discriminator, self).__init__()
         self.H,self.W,self.C=img_shape
         self.conditionExpand=nn.Sequential(
@@ -52,10 +48,6 @@ class Discriminator(nn.Module):
 
 class Generator(nn.Module):
     def __init__(self,z_dim,c_dim):
-        """
-        :param z_dim: 100
-        :param c_dim: 100
-        """
         super(Generator,self).__init__()
         self.z_dim=z_dim
         self.c_dim=c_dim
