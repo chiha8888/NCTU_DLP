@@ -7,8 +7,9 @@ from evaluator import EvaluationModel
 device=torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 z_dim=100
 c_dim=200
+G_times=4
 test_path=os.path.join('dataset','test.json')
-generator_path=os.path.join('models',f'c_dim 200 G4','epoch189_score0.72.pt')
+generator_path=os.path.join('models',f'c_dim {c_dim} G{G_times}','epoch189_score0.72.pt')
 
 if __name__=='__main__':
     # load testing data conditions
