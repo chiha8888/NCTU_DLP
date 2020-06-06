@@ -1,0 +1,4 @@
+/home/dorawu/下載/clion-2020.1.1/bin/cmake/linux/bin/cmake -DCMAKE_BUILD_TYPE=Debug -G "CodeBlocks - Unix Makefiles" /home/dorawu/桌面/DLP/lab7/code
+-- Configuring done
+-- Generating done
+-- Build files have been written to: /home/dorawu/桌面/DLP/lab7/code/cmake-build-debug

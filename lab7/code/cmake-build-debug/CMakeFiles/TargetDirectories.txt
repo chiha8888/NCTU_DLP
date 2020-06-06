@@ -1,0 +1,3 @@
+/home/dorawu/桌面/DLP/lab7/code/cmake-build-debug/CMakeFiles/rebuild_cache.dir
+/home/dorawu/桌面/DLP/lab7/code/cmake-build-debug/CMakeFiles/edit_cache.dir
+/home/dorawu/桌面/DLP/lab7/code/cmake-build-debug/CMakeFiles/code.dir

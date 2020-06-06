@@ -1,0 +1,34 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/home/dorawu/桌面/DLP/lab7/code/2048.cpp
+iostream
+-
+algorithm
+-
+functional
+-
+iterator
+-
+vector
+-
+array
+-
+limits
+-
+numeric
+-
+string
+-
+sstream
+-
+fstream
+-
+cmath
+-
+
