@@ -101,7 +101,7 @@ class DQN:
         with torch.no_grad():
             q_next = self._target_net(next_state).max(dim=1)[0].view(-1,1)
             q_target = reward + gamma*q_next*(1-done)
-        criterion = torch.nn.MSELoss()
+        criterion = nn.MSELoss()
         loss = criterion(q_value, q_target)
 
         # bp
@@ -152,6 +152,7 @@ def train(args, env, agent, writer):
             else:
                 action = agent.select_action(state, epsilon, action_space)
                 epsilon = max(epsilon * args.eps_decay, args.eps_min)
+            # execute action
             next_state, reward, done, _ = env.step(action)
 
             # store transition
@@ -189,7 +190,7 @@ def test(args, env, agent, writer):
         for t in itertools.count(start=1):  # play an episode
             # select action
             action = agent.select_action(state, epsilon, action_space)
-            epsilon = max(epsilon * args.eps_decay, args.eps_min)
+            # execute action
             next_state, reward, done, _ = env.step(action)
 
             state = next_state
@@ -213,11 +214,11 @@ def main():
     parser.add_argument('--logdir', default='log/dqn')
     # train
     parser.add_argument('--warmup', default=10000, type=int)
-    parser.add_argument('--episode', default=1200, type=int)
+    parser.add_argument('--episode', default=2000, type=int)#1200
     parser.add_argument('--capacity', default=10000, type=int)
     parser.add_argument('--batch_size', default=128, type=int)
     parser.add_argument('--lr', default=.0005, type=float)
-    parser.add_argument('--eps_decay', default=.995, type=float)
+    parser.add_argument('--eps_decay', default=.999, type=float)#.995
     parser.add_argument('--eps_min', default=.01, type=float)    # eps from 1.0 ~ 0.01
     parser.add_argument('--gamma', default=.99, type=float)
     parser.add_argument('--freq', default=4, type=int)           # update behavior network every 4 iterations
@@ -233,10 +234,12 @@ def main():
     env = gym.make('LunarLander-v2')
     agent = DQN(args)
     writer = SummaryWriter(args.logdir)
-    # if not args.test_only:
-    #     train(args, env, agent, writer)
-    #     agent.save(args.model,checkpoint=True)
-    agent.load(args.model)
+
+    if not args.test_only:
+        train(args, env, agent, writer)
+        agent.save(args.model,checkpoint=True)
+
+    agent.load(args.model,checkpoint=True)
     test(args, env, agent, writer)
 
 
