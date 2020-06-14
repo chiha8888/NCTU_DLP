@@ -63,7 +63,7 @@ class ActorNet(nn.Module):
 
 
 class CriticNet(nn.Module):
-    def __init__(self, state_dim=8, action_dim=1, hidden_dim=(400, 300)):
+    def __init__(self, state_dim=8, action_dim=2, hidden_dim=(400, 300)):
         super().__init__()
         h1, h2 = hidden_dim
         self.critic_head = nn.Sequential(
@@ -73,7 +73,7 @@ class CriticNet(nn.Module):
         self.critic = nn.Sequential(
             nn.Linear(h1, h2),
             nn.ReLU(),
-            nn.Linear(h2, action_dim),
+            nn.Linear(h2, 1),
         )
 
     def forward(self, x, action):
@@ -112,11 +112,11 @@ class DDPG:
         ## TODO ##
         with torch.no_grad():
             if noise:
-                return self._actor_net(torch.from_numpy(state).view(1,-1).to(self.device))+\
+                re = self._actor_net(torch.from_numpy(state).view(1,-1).to(self.device))+\
                        torch.from_numpy(self._action_noise.sample()).view(1,-1).to(self.device)
             else:
-                return self._actor_net(torch.from_numpy(state).view(1,-1).to(self.device))
-
+                re = self._actor_net(torch.from_numpy(state).view(1,-1).to(self.device))
+        return re.cpu().numpy().squeeze()
 
     def append(self, state, action, reward, next_state, done):
         self._memory.append(state, action, [reward / 100], next_state,
@@ -231,14 +231,9 @@ def train(args, env, agent, writer):
             total_steps += 1
             if done:
                 ewma_reward = 0.05 * total_reward + (1 - 0.05) * ewma_reward
-                writer.add_scalar('Train/Episode Reward', total_reward,
-                                  total_steps)
-                writer.add_scalar('Train/Ewma Reward', ewma_reward,
-                                  total_steps)
-                print(
-                    'Step: {}\tEpisode: {}\tLength: {:3d}\tTotal reward: {:.2f}\tEwma reward: {:.2f}'
-                    .format(total_steps, episode, t, total_reward,
-                            ewma_reward))
+                writer.add_scalar('Train/Episode Reward', total_reward, total_steps)
+                writer.add_scalar('Train/Ewma Reward', ewma_reward, total_steps)
+                print(f'Step: {total_steps}\tEpisode: {episode}\tLength: {t:3d}\tTotal reward: {total_reward:.2f}\tEwma reward: {ewma_reward:.2f}')
                 break
     env.close()
 
@@ -297,9 +292,9 @@ def main():
     agent = DDPG(args)
     writer = SummaryWriter(args.logdir)
 
-    if not args.test_only:
-        train(args, env, agent, writer)
-        agent.save(args.model,checkpoint=True)
+    # if not args.test_only:
+    #     train(args, env, agent, writer)
+    #     agent.save(args.model,checkpoint=True)
 
     agent.load(args.model,checkpoint=True)
     test(args, env, agent, writer)

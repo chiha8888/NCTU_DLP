@@ -145,13 +145,13 @@ def train(args, env, agent, writer):
     for episode in range(args.episode):
         total_reward = 0
         state = env.reset()
+        epsilon = max(epsilon * args.eps_decay, args.eps_min)
         for t in itertools.count(start=1):  # play an episode
             # select action
             if total_steps < args.warmup:
                 action = action_space.sample()
             else:
                 action = agent.select_action(state, epsilon, action_space)
-                epsilon = max(epsilon * args.eps_decay, args.eps_min)
             # execute action
             next_state, reward, done, _ = env.step(action)
 
@@ -167,10 +167,8 @@ def train(args, env, agent, writer):
             total_steps += 1
             if done:
                 ewma_reward = 0.05 * total_reward + (1 - 0.05) * ewma_reward
-                writer.add_scalar('Train/Episode Reward', total_reward,
-                                  total_steps)
-                writer.add_scalar('Train/Ewma Reward', ewma_reward,
-                                  total_steps)
+                writer.add_scalar('Train/Episode Reward', total_reward, total_steps)
+                writer.add_scalar('Train/Ewma Reward', ewma_reward, total_steps)
                 print(f'Step: {total_steps}\tEpisode: {episode}\tLength: {t:3d}\tTotal reward: {total_reward:.2f}\tEwma reward: {ewma_reward:.2f}\tEpsilon: {epsilon:.3f}')
                 break
     env.close()
@@ -218,7 +216,7 @@ def main():
     parser.add_argument('--capacity', default=10000, type=int)
     parser.add_argument('--batch_size', default=128, type=int)
     parser.add_argument('--lr', default=.0005, type=float)
-    parser.add_argument('--eps_decay', default=.999, type=float)#.995
+    parser.add_argument('--eps_decay', default=.995, type=float)
     parser.add_argument('--eps_min', default=.01, type=float)    # eps from 1.0 ~ 0.01
     parser.add_argument('--gamma', default=.99, type=float)
     parser.add_argument('--freq', default=4, type=int)           # update behavior network every 4 iterations
@@ -235,9 +233,9 @@ def main():
     agent = DQN(args)
     writer = SummaryWriter(args.logdir)
 
-    if not args.test_only:
-        train(args, env, agent, writer)
-        agent.save(args.model,checkpoint=True)
+    # if not args.test_only:
+    #     train(args, env, agent, writer)
+    #     agent.save(args.model,checkpoint=True)
 
     agent.load(args.model,checkpoint=True)
     test(args, env, agent, writer)
