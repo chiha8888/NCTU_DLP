@@ -64,6 +64,7 @@ WGAN-GP score: 0.40
 RL N-tuple Network解2048  
 
 共有4(pattern)x8(isomorphism)=32個feature  
+weights.bin in code dir:https://drive.google.com/file/d/116l-xMGBTbqJVKA1sYHQiHPbrQzeeemL/view?usp=sharing  
 
 2048的win-rate: 94.1%  
 
