@@ -292,9 +292,9 @@ def main():
     agent = DDPG(args)
     writer = SummaryWriter(args.logdir)
 
-    # if not args.test_only:
-    #     train(args, env, agent, writer)
-    #     agent.save(args.model,checkpoint=True)
+    if not args.test_only:
+        train(args, env, agent, writer)
+        agent.save(args.model,checkpoint=True)
 
     agent.load(args.model,checkpoint=True)
     test(args, env, agent, writer)
