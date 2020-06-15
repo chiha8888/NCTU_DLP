@@ -248,6 +248,7 @@ def test(args, env, agent, writer):
         state = env.reset()
         ## TODO ##
         for t in itertools.count(start=1):
+            env.render()
             # select action
             action = agent.select_action(state,noise=False)
             # execute action
@@ -292,9 +293,9 @@ def main():
     agent = DDPG(args)
     writer = SummaryWriter(args.logdir)
 
-    if not args.test_only:
-        train(args, env, agent, writer)
-        agent.save(args.model,checkpoint=True)
+    # if not args.test_only:
+    #     train(args, env, agent, writer)
+    #     agent.save(args.model,checkpoint=True)
 
     agent.load(args.model,checkpoint=True)
     test(args, env, agent, writer)

@@ -187,6 +187,7 @@ def test(args, env, agent, writer):
         state = env.reset()
         ## TODO ##
         for t in itertools.count(start=1):  # play an episode
+            env.render()
             # select action
             action = agent.select_action(state, epsilon, action_space)
             # execute action
@@ -234,9 +235,9 @@ def main():
     agent = DDQN(args)
     writer = SummaryWriter(args.logdir)
 
-    if not args.test_only:
-        train(args, env, agent, writer)
-        agent.save(args.model,checkpoint=True)
+    # if not args.test_only:
+    #     train(args, env, agent, writer)
+    #     agent.save(args.model,checkpoint=True)
 
     agent.load(args.model,checkpoint=True)
     test(args, env, agent, writer)
