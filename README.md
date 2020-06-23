@@ -50,7 +50,7 @@ GAN-based model生成具有有色幾何物體的圖片(64x64x3)
 
 cDCGAN score: 0.71  
 WGAN-GP score: 0.40  
-傳統cDCGAN score: 0.36
+傳統cDCGAN score: 0.36  
 正解: ACGAN
 
 結論：  
