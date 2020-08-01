@@ -26,7 +26,7 @@ def main():
     opt.print_options(args)
     
     sourceloader, targetloader = CreateSrcDataLoader(args), CreateTrgDataLoader(args)
-    targetloader_iter, sourceloader_iter = iter(targetloader), iter(sourceloader)
+    sourceloader_iter, targetloader_iter =  iter(sourceloader), iter(targetloader)
     
     model, optimizer = CreateModel(args)
     model_D, optimizer_D = CreateDiscriminator(args)
@@ -46,6 +46,7 @@ def main():
     model_D.train()
     model_D.cuda()
     loss = ['loss_seg_src', 'loss_seg_trg', 'loss_D_trg_fake', 'loss_D_src_real', 'loss_D_trg_real']
+
     _t['iter time'].tic()
     for i in range(start_iter, args.num_steps):
         
@@ -54,15 +55,24 @@ def main():
         
         optimizer.zero_grad()
         optimizer_D.zero_grad()
+        """
+        train Segmentation model
+        """
         for param in model_D.parameters():
             param.requires_grad = False 
-            
+
+        '''
+        train on [S':transferred source images] for loss_seg_src
+        '''
         src_img, src_lbl, _, _ = sourceloader_iter.next()
         src_img, src_lbl = Variable(src_img).cuda(), Variable(src_lbl.long()).cuda()
         src_seg_score = model(src_img, lbl=src_lbl)
         loss_seg_src = model.loss   
         loss_seg_src.backward()
-        
+
+        '''
+        train on [T:target images] for loss_seg_trg
+        '''
         if args.data_label_folder_target is not None:
             trg_img, trg_lbl, _, _ = targetloader_iter.next()
             trg_img, trg_lbl = Variable(trg_img).cuda(), Variable(trg_lbl.long()).cuda()
@@ -79,7 +89,11 @@ def main():
         
         loss_trg = args.lambda_adv_target * loss_D_trg_fake + loss_seg_trg
         loss_trg.backward()
-        
+
+
+        """
+        train Discriminator
+        """
         for param in model_D.parameters():
             param.requires_grad = True
         
@@ -93,24 +107,26 @@ def main():
         loss_D_trg_real = model_D.loss / 2
         loss_D_trg_real.backward()       
        
-        
+        """
+        update segmentation model & discriminator model
+        """
         optimizer.step()
         optimizer_D.step()
         
-        
+
+
         for m in loss:
             train_writer.add_scalar(m, eval(m), i+1)
             
         if (i+1) % args.save_pred_every == 0:
-            print 'taking snapshot ...'
+            print('taking snapshot ...')
             torch.save(model.state_dict(), os.path.join(args.snapshot_dir, '%s_' %(args.source) +str(i+1)+'.pth' ))   
             
         if (i+1) % args.print_freq == 0:
             _t['iter time'].toc(average=False)
-            print '[it %d][src seg loss %.4f][lr %.4f][%.2fs]' % \
-                    (i + 1, loss_seg_src.data, optimizer.param_groups[0]['lr']*10000, _t['iter time'].diff)
+            print('[it %d][src seg loss %.4f][lr %.4f][%.2fs]' % (i + 1, loss_seg_src.data, optimizer.param_groups[0]['lr']*10000, _t['iter time'].diff))
             if i + 1 > args.num_steps_stop:
-                print 'finish training'
+                print('finish training')
                 break
             _t['iter time'].tic()
             

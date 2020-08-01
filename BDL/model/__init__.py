@@ -2,6 +2,7 @@ from model.deeplab import Deeplab
 from model.fcn8s import VGG16_FCN8s
 from model.discriminator import FCDiscriminator
 import torch.optim as optim
+import torch
 
 
 def CreateModel(args):

@@ -39,13 +39,14 @@ class GTA5DataSet(data.Dataset):
 
         image = np.asarray(image, np.float32)
         label = np.asarray(label, np.float32)
+
         label_copy = self.ignore_label * np.ones(label.shape, dtype=np.float32)
         for k, v in self.id_to_trainid.items():
             label_copy[label == k] = v
         size = image.shape
         image = image[:, :, ::-1]  # change to BGR
         image -= self.mean
-        image = image.transpose((2, 0, 1))
+        image = image.transpose((2, 0, 1)) # change to CHW
 
         return image.copy(), label_copy.copy(), np.array(size), name
 

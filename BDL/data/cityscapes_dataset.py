@@ -25,7 +25,6 @@ class cityscapesDataSet(data.Dataset):
         return len(self.img_ids)
 
     def __getitem__(self, index):
-
         name = self.img_ids[index]
         image = Image.open(osp.join(self.root, "leftImg8bit/%s/%s" % (self.set, name))).convert('RGB')
         # resize

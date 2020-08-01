@@ -2,6 +2,7 @@ import torch.nn as nn
 import torch.nn.functional as F
 import math
 import torch.utils.model_zoo as model_zoo
+from torch.autograd import Variable
 import torch
 import numpy as np
 
@@ -148,6 +149,7 @@ class ResNet101(nn.Module):
                 #            i.requires_grad = False
 
     def _make_layer(self, block, planes, blocks, stride=1, dilation=1):
+        # using downsample for incompatible #channel
         downsample = None
         if stride != 1 or self.inplanes != planes * block.expansion or dilation == 2 or dilation == 4:
             downsample = nn.Sequential(
@@ -167,7 +169,7 @@ class ResNet101(nn.Module):
     def _make_pred_layer(self, block, inplanes, dilation_series, padding_series, num_classes):
         return block(inplanes, dilation_series, padding_series, num_classes)
 
-    def forward(self, x, ssl=False, lbl=None):
+    def forward(self, x, ssl=False, lbl=None):  # lbl: target label
         _, _, h, w = x.size()
         x = self.conv1(x)
         x = self.bn1(x)
@@ -237,6 +239,7 @@ class ResNet101(nn.Module):
             return Variable(torch.zeros(1))
         predict = predict.transpose(1, 2).transpose(2, 3).contiguous()
         predict = predict[target_mask.view(n, h, w, 1).repeat(1, 1, 1, c)].view(-1, c)
+
         loss = F.cross_entropy(predict, target, weight=weight, size_average=size_average)
         return loss    
 
